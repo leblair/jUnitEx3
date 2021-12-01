@@ -59,11 +59,13 @@ public class Account {
 
     public boolean withdraw(float amount, float comission) {
         // check parameters
+        boolean valid = false;
         if (isValidWithdraw(amount, comission)) {
             amount += comission;
             balance = balance - amount;
+            valid = true;
         }
-        return isValidWithdraw(amount, comission);
+        return valid;
     }
 
     private boolean isValidWithdraw(float amount, float comission) {
@@ -73,9 +75,8 @@ public class Account {
     }
 
 
-    private void addAnnualInterest() {
-        balance += (balance + annualInterest);
-
+    public void addAnnualInterest() {
+        balance += (balance * annualInterest);
     }
 
 
@@ -91,6 +92,16 @@ public class Account {
 
     public String toString() {
         return (acctNumber + "\t" + name + "\t" + fmt.format(balance));
+    }
+
+    public boolean transfer (Account compteDesti, float quantitatTransferir){
+        //comprovar que al balance hi hagi suficients diners i afegir-los al compte destí
+        if(this.withdraw(quantitatTransferir,0)&&quantitatTransferir!=0&& compteDesti.deposit(quantitatTransferir)){
+            this.withdraw(quantitatTransferir,0);
+            compteDesti.deposit(quantitatTransferir);
+            return true;
+        }
+        return false;
     }
 
 
